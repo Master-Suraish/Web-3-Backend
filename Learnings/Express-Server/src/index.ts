@@ -1,10 +1,14 @@
-import express, { Response, Request } from "express";
+import express, { Response, Request, NextFunction } from "express";
 
 const app = express();
 const PORT = 3000;
 
 app.use(express.json());
 
+app.use((req: Request, res: Response, next: NextFunction) => {
+  console.log(`${req.method} ${req.url} - ${new Date().toLocaleTimeString()}`);
+  next(); // Pass control to next middleware/route
+});
 interface DeveloperTypes {
   id: number;
   name: string;
@@ -101,6 +105,27 @@ app.delete("/delete/:id", (req: Request, res: Response) => {
     .json({ message: "Deleted Developer Successfully!", data: deletedDev });
 });
 
+app.put("/updateDev/:id", (req: Request, res: Response) => {
+  const devId: number = Number(req.params.id);
+
+  const devIndex = developers.findIndex((dev) => dev.id === devId);
+
+  if (devIndex === -1) {
+    return res.status(404).json({ message: "Dev not found" });
+  }
+
+  const updatedData = req.body;
+
+  developers[devIndex] = {
+    ...developers[devIndex],
+    ...updatedData,
+  };
+
+  res.status(200).json({
+    message: "Dev updated successfully!",
+    data: developers[devIndex],
+  });
+});
 
 app.listen(PORT, () => {
   console.log(`your server is running on http://localhost:${PORT}`);
