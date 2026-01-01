@@ -14,7 +14,7 @@ route.get("/Products", getAllProducts);
 route.get("/Product/:productId", getOneProduct);
 route.post("/Product/Create", createNewProduct);
 route.put("/Product/Update/:productId", updateProduct);
-route.put("/Product/Delete/:productId", softDelProduct);
+route.delete("/Product/Delete/:productId", softDelProduct);
 route.put("/Product/Restore/:productId", restoreSoftDelProduct);
 
 export default route;
